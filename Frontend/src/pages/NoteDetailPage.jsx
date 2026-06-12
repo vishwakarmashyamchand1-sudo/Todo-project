@@ -113,6 +113,19 @@ const NoteDetailPage = () => {
                 />
               </div>
 
+              <div className="form-control mb-4">
+                <label className="label">
+                  <span className="label-text">Name of the Creator</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter your name"
+                  className="input input-bordered"
+                  value={note.name || ""}
+                  onChange={(e) => setNote({ ...note, name: e.target.value })}
+                />
+              </div>
+
               <div className="card-actions justify-end">
                 <button className="btn btn-primary" disabled={saving} onClick={handleSave}>
                   {saving ? "Saving..." : "Save Changes"}

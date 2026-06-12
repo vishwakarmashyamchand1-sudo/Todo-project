@@ -1,8 +1,22 @@
 import Note from "../models/Note.js";
 
-export async function getAllNotes(_, res) {
+export async function getAllNotes(req, res) {
   try {
-    const notes = await Note.find().sort({ createdAt: -1 }); // -1 will sort in desc. order (newest first)
+    const { name } = req.query;
+    let query = {};
+    
+    console.log("Search Name:", req.query.name);
+
+    if (name && name.trim() !== "") {
+      query.name = {
+        $regex: name.trim(),
+        $options: "i",
+      };
+    }
+
+    console.log("Mongo Query:", query);
+
+    const notes = await Note.find(query).sort({ createdAt: -1 }); // -1 will sort in desc. order (newest first)
     res.status(200).json(notes);
   } catch (error) {
     console.error("Error in getAllNotes controller", error);
@@ -23,8 +37,8 @@ export async function getNoteById(req, res) {
 
 export async function createNote(req, res) {
   try {
-    const { title, content } = req.body;
-    const note = new Note({ title, content });
+    const { title, content, name } = req.body;
+    const note = new Note({ title, content, name });
 
     const savedNote = await note.save();
     res.status(201).json(savedNote);
@@ -36,10 +50,10 @@ export async function createNote(req, res) {
 
 export async function updateNote(req, res) {
   try {
-    const { title, content } = req.body;
+    const { title, content, name } = req.body;
     const updatedNote = await Note.findByIdAndUpdate(
       req.params.id,
-      { title, content },
+      { title, content, name },
       {
         new: true,
       }

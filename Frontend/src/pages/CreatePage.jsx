@@ -8,13 +8,13 @@ const CreatePage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [name, setName] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title.trim() || !content.trim()) {
+    if (!title.trim() || !content.trim() || !name.trim()) {
       toast.error("All fields are required");
       return;
     }
@@ -24,6 +24,7 @@ const CreatePage = () => {
       await api.post("/notes", {
         title,
         content,
+        name,
       });
 
       toast.success("Note created successfully!");
@@ -33,7 +34,7 @@ const CreatePage = () => {
       if (error.response.status === 429) {
         toast.error("Slow down! You're creating notes too fast", {
           duration: 4000,
-          icon: "💀",
+          
         });
       } else {
         toast.error("Failed to create note");
@@ -78,6 +79,18 @@ const CreatePage = () => {
                     className="textarea textarea-bordered h-32"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
+                  />
+                </div>
+                <div className="form-control mb-4">
+                  <label className="label">
+                    <span className="label-text">Name of the Creator</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder=" Enter Name"
+                    className="input input-bordered"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
 

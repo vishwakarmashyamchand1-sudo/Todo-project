@@ -11,6 +11,7 @@ const Navbar = () => {
             <Link to={"/create"} className="btn btn-primary">
               <PlusIcon className="size-5" />
               <span>New Note</span>
+              
             </Link>
           </div>
         </div>
