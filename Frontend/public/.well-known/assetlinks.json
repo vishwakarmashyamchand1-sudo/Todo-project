@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.vercel.todo_project_omega_mocha.twa",
+    "sha256_cert_fingerprints": ["E6:8B:B5:7E:BA:3C:9E:9D:BB:31:5C:9B:75:DF:57:CB:BA:F3:4B:BE:F3:01:9C:92:C7:3E:22:0E:E4:12:8E:0F"]
+  }
+}]
