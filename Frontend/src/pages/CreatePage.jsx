@@ -9,6 +9,7 @@ const CreatePage = () => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
+  const [image, setImage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -25,6 +26,7 @@ const CreatePage = () => {
         title,
         content,
         name,
+        image,
       });
 
       toast.success("Note created successfully!");
@@ -92,6 +94,40 @@ const CreatePage = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
+                </div>
+
+                <div className="form-control mb-4">
+                  <label className="label">
+                    <span className="label-text">Capture Photo (Optional)</span>
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    className="file-input file-input-bordered w-full"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setImage(reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                  {image && (
+                    <div className="relative mt-2">
+                      <img src={image} alt="Preview" className="mt-4 w-full h-48 object-cover rounded-lg border border-base-300" />
+                      <button 
+                        type="button" 
+                        className="btn btn-sm btn-circle btn-error absolute top-6 right-2"
+                        onClick={() => setImage("")}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <div className="card-actions justify-end">

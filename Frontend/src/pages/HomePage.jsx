@@ -39,7 +39,7 @@ const HomePage = () => {
       
       if (cachedNotes) {
         setNotes(JSON.parse(cachedNotes));
-        toast.success("Offline Mode: Showing cached notes");
+        toast.success("Offline Mode - Turn on Data for latest notes");
         return;
       }
 

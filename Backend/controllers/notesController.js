@@ -37,8 +37,8 @@ export async function getNoteById(req, res) {
 
 export async function createNote(req, res) {
   try {
-    const { title, content, name } = req.body;
-    const note = new Note({ title, content, name });
+    const { title, content, name, image } = req.body;
+    const note = new Note({ title, content, name, image });
 
     const savedNote = await note.save();
     res.status(201).json(savedNote);
@@ -50,10 +50,10 @@ export async function createNote(req, res) {
 
 export async function updateNote(req, res) {
   try {
-    const { title, content, name } = req.body;
+    const { title, content, name, image } = req.body;
     const updatedNote = await Note.findByIdAndUpdate(
       req.params.id,
-      { title, content, name },
+      { title, content, name, image },
       {
         new: true,
       }

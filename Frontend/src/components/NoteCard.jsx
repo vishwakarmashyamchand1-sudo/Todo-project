@@ -27,6 +27,11 @@ const NoteCard = ({ note, setNotes }) => {
       border-t-4 border-solid border-[ \(\#1589FF\)]"
     >
       <div className="card-body">
+        {note.image && (
+          <figure className="-mx-8 -mt-8 mb-4 overflow-hidden h-48">
+            <img src={note.image} alt="Note" className="w-full h-full object-cover" />
+          </figure>
+        )}
         <h3 className="card-title text-base-content">{note.title}</h3>
         <p className="text-base-content/70 line-clamp-3">{note.content}</p>
         <p3 className="absolute top-4 right-4 badge badge-secondary badge-sm font-semibold shadow-sm">createdBy: {note.name}</p3>

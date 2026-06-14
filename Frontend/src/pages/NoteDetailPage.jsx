@@ -88,6 +88,11 @@ const NoteDetailPage = () => {
 
           <div className="card bg-base-100">
             <div className="card-body">
+              {note.image && (
+                <figure className="mb-6 rounded-xl overflow-hidden border border-base-300">
+                  <img src={note.image} alt="Note" className="w-full object-cover max-h-96" />
+                </figure>
+              )}
               <div className="form-control mb-4">
                 <label className="label">
                   <span className="label-text">Title</span>
