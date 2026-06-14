@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import RateLimitedUI from "../components/RateLimitedUI";
 import api from "../lib/axios";
@@ -13,6 +13,7 @@ const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [allCreators, setAllCreators] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchInputRef = useRef(null);
 
   const fetchNotes = async (searchName = "") => {
     try {
@@ -59,6 +60,14 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchNotes();
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("search") === "true") {
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 100);
+    }
   }, []);
 
   return (
@@ -76,6 +85,7 @@ const HomePage = () => {
           <div className="mb-8 flex justify-center gap-2 relative z-50">
             <div className="relative w-full max-w-md">
               <input
+                ref={searchInputRef}
                 type="text"
                 placeholder="Search notes by creator name..."
                 className="input input-bordered w-full bg-gray-800 text-white placeholder-gray-400 border-gray-600 focus:border-primary focus:outline-none"

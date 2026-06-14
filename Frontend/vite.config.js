@@ -32,7 +32,7 @@ export default defineConfig({
             name: "Search Notes",
             short_name: "Search",
             description: "Search notes",
-            url: "/",
+            url: "/?search=true",
             icons: [
               {
                 src: "/pwa-192x192.png",
