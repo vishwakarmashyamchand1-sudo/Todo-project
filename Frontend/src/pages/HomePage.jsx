@@ -22,6 +22,8 @@ const HomePage = () => {
       console.log(res.data);
       setNotes(res.data);
       localStorage.setItem("cachedNotes", JSON.stringify(res.data));
+      console.log("Saving notes:", res.data);
+      console.log("LocalStorage:", localStorage.getItem("cachedNotes"));
       
       if (!searchName) {
         const uniqueCreators = [...new Set(res.data.map(n => n.name).filter(Boolean))];
@@ -30,8 +32,11 @@ const HomePage = () => {
       setIsRateLimited(false);
     } catch (error) {
       console.log("Error fetching notes", error);
+      console.log("Entered catch block");
 
       const cachedNotes = localStorage.getItem("cachedNotes");
+      console.log("Cached Notes:", cachedNotes);
+      
       if (cachedNotes) {
         setNotes(JSON.parse(cachedNotes));
         toast.success("Offline Mode: Showing cached notes");
