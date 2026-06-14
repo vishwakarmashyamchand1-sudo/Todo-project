@@ -100,11 +100,13 @@ const CreatePage = () => {
                   <label className="label">
                     <span className="label-text">Capture Photo (Optional)</span>
                   </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    className="file-input file-input-bordered w-full"
+                  <label className="btn btn-secondary w-full cursor-pointer">
+                    📷 Take Photo
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      className="hidden"
                     onChange={(e) => {
                       const file = e.target.files[0];
                       if (file) {
@@ -116,6 +118,7 @@ const CreatePage = () => {
                       }
                     }}
                   />
+                  </label>
                   {image && (
                     <div className="relative mt-2">
                       <img src={image} alt="Preview" className="mt-4 w-full h-48 object-cover rounded-lg border border-base-300" />
