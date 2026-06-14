@@ -21,9 +21,13 @@ const HomePage = () => {
       const res = await api.get(url);
       console.log(res.data);
       setNotes(res.data);
-      localStorage.setItem("cachedNotes", JSON.stringify(res.data));
-      console.log("Saving notes:", res.data);
-      console.log("LocalStorage:", localStorage.getItem("cachedNotes"));
+      try {
+        localStorage.setItem("cachedNotes", JSON.stringify(res.data));
+        console.log("Saving notes:", res.data);
+        console.log("LocalStorage:", localStorage.getItem("cachedNotes"));
+      } catch (cacheError) {
+        console.warn("Cache save failed (Quota Exceeded):", cacheError);
+      }
       
       if (!searchName) {
         const uniqueCreators = [...new Set(res.data.map(n => n.name).filter(Boolean))];
