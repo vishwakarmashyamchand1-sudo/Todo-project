@@ -23,9 +23,10 @@ const HomePage = () => {
       console.log(res.data);
       setNotes(res.data);
       try {
-        localStorage.setItem("cachedNotes", JSON.stringify(res.data));
-        console.log("Saving notes:", res.data);
-        console.log("LocalStorage:", localStorage.getItem("cachedNotes"));
+        if (!searchName) {
+          localStorage.setItem("cachedNotes", JSON.stringify(res.data));
+          console.log("Saving all notes to cache");
+        }
       } catch (cacheError) {
         console.warn("Cache save failed (Quota Exceeded):", cacheError);
       }
@@ -40,10 +41,13 @@ const HomePage = () => {
       console.log("Entered catch block");
 
       const cachedNotes = localStorage.getItem("cachedNotes");
-      console.log("Cached Notes:", cachedNotes);
       
       if (cachedNotes) {
-        setNotes(JSON.parse(cachedNotes));
+        let parsedNotes = JSON.parse(cachedNotes);
+        if (searchName) {
+          parsedNotes = parsedNotes.filter(n => n.name && n.name.toLowerCase().includes(searchName.toLowerCase()));
+        }
+        setNotes(parsedNotes);
         toast.success("Offline Mode - Turn on Data for latest notes");
         return;
       }
