@@ -22,12 +22,19 @@ const CreatePage = () => {
 
     setLoading(true);
     try {
-      await api.post("/notes", {
-        title,
-        content,
-        name,
-        image,
-      });
+      const notePayload = { title, content, name, image };
+
+      if (!navigator.onLine) {
+        const pendingNotes = JSON.parse(localStorage.getItem("pendingNotes") || "[]");
+        pendingNotes.push(notePayload);
+        localStorage.setItem("pendingNotes", JSON.stringify(pendingNotes));
+        toast.success("Note saved offline. Will sync automatically when internet returns.");
+        navigate("/");
+        return;
+      }
+
+      await api.post("/notes", notePayload);
+
 
       toast.success("Note created successfully!");
       navigate("/");
