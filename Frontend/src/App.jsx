@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import api from "./lib/axios";
+import { sendBrowserNotification } from "./lib/notifications";
 
 import HomePage from "./pages/HomePage";
 import CreatePage from "./pages/CreatePage";
@@ -30,6 +31,7 @@ const App = () => {
 
       if (syncedCount > 0) {
         toast.success(`Successfully synced ${syncedCount} offline note(s) to database!`);
+        sendBrowserNotification("Notes Synced Successfully", "Your data has been synced successfully. Open the app to view the latest updates.");
       }
 
       localStorage.setItem("pendingNotes", JSON.stringify(remainingNotes));

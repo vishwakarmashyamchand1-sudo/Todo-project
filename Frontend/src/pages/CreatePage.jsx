@@ -3,6 +3,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router";
 import api from "../lib/axios";
+import { sendBrowserNotification } from "../lib/notifications";
 
 const CreatePage = () => {
   const [title, setTitle] = useState("");
@@ -25,11 +26,17 @@ const CreatePage = () => {
       const notePayload = { title, content, name, image };
 
       if (!navigator.onLine) {
-        const pendingNotes = JSON.parse(localStorage.getItem("pendingNotes") || "[]");
-        pendingNotes.push(notePayload);
-        localStorage.setItem("pendingNotes", JSON.stringify(pendingNotes));
-        toast.success("Note saved offline. Will sync automatically when internet returns.");
-        navigate("/");
+        try {
+          const pendingNotes = JSON.parse(localStorage.getItem("pendingNotes") || "[]");
+          pendingNotes.push(notePayload);
+          localStorage.setItem("pendingNotes", JSON.stringify(pendingNotes));
+          toast.success("Note saved offline. Will sync automatically when internet returns.");
+          sendBrowserNotification("Offline Note Saved", "Your note will sync automatically when internet returns.");
+          navigate("/");
+        } catch (err) {
+          console.error("Storage full or quota exceeded", err);
+          toast.error("Storage full! Please go online to sync notes before adding more images.");
+        }
         return;
       }
 
@@ -119,7 +126,28 @@ const CreatePage = () => {
                       if (file) {
                         const reader = new FileReader();
                         reader.onloadend = () => {
-                          setImage(reader.result);
+                          const img = new Image();
+                          img.onload = () => {
+                            let width = img.width;
+                            let height = img.height;
+                            const MAX_WIDTH = 800;
+
+                            if (width > MAX_WIDTH) {
+                              height = Math.round((height * MAX_WIDTH) / width);
+                              width = MAX_WIDTH;
+                            }
+
+                            const canvas = document.createElement("canvas");
+                            canvas.width = width;
+                            canvas.height = height;
+
+                            const ctx = canvas.getContext("2d");
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+                            setImage(compressedBase64);
+                          };
+                          img.src = reader.result;
                         };
                         reader.readAsDataURL(file);
                       }
