@@ -26,17 +26,12 @@ const CreatePage = () => {
       const notePayload = { title, content, name, image };
 
       if (!navigator.onLine) {
-        try {
-          const pendingNotes = JSON.parse(localStorage.getItem("pendingNotes") || "[]");
-          pendingNotes.push(notePayload);
-          localStorage.setItem("pendingNotes", JSON.stringify(pendingNotes));
-          toast.success("Note saved offline. Will sync automatically when internet returns.");
-          sendBrowserNotification("Offline Note Saved", "Your note will sync automatically when internet returns.");
-          navigate("/");
-        } catch (err) {
-          console.error("Storage full or quota exceeded", err);
-          toast.error("Storage full! Please go online to sync notes before adding more images.");
-        }
+        const pendingNotes = JSON.parse(localStorage.getItem("pendingNotes") || "[]");
+        pendingNotes.push(notePayload);
+        localStorage.setItem("pendingNotes", JSON.stringify(pendingNotes));
+        toast.success("Note saved offline. Will sync automatically when internet returns.");
+        sendBrowserNotification("Offline Note Saved", "Your note will sync automatically when internet returns.");
+        navigate("/");
         return;
       }
 

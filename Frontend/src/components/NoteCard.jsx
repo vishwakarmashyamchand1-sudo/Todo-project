@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 const NoteCard = ({ note, setNotes }) => {
   const handleDelete = async (e, id) => {
     e.preventDefault(); // get rid of the navigation behaviour
+    e.stopPropagation(); // prevent click from bubbling up to the Link
 
     if (!window.confirm("Are you sure you want to delete this note?")) return;
 
