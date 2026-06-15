@@ -22,14 +22,6 @@ const HomePage = () => {
       const res = await api.get(url);
       console.log(res.data);
       setNotes(res.data);
-      try {
-        if (!searchName) {
-          localStorage.setItem("cachedNotes", JSON.stringify(res.data));
-          console.log("Saving all notes to cache");
-        }
-      } catch (cacheError) {
-        console.warn("Cache save failed (Quota Exceeded):", cacheError);
-      }
       
       if (!searchName) {
         const uniqueCreators = [...new Set(res.data.map(n => n.name).filter(Boolean))];
@@ -38,21 +30,12 @@ const HomePage = () => {
       setIsRateLimited(false);
     } catch (error) {
       console.log("Error fetching notes", error);
-      console.log("Entered catch block");
-
-      const cachedNotes = localStorage.getItem("cachedNotes");
       
-      if (cachedNotes) {
-        let parsedNotes = JSON.parse(cachedNotes);
-        if (searchName) {
-          parsedNotes = parsedNotes.filter(n => n.name && n.name.toLowerCase().includes(searchName.toLowerCase()));
-        }
-        setNotes(parsedNotes);
-        toast.success("Offline Mode - Turn on Data for latest notes");
-        return;
-      }
-
-      if (error.response?.status === 429) {
+      // If the service worker's NetworkFirst strategy fails, it means
+      // the network is down AND the cache is empty (e.g. first visit offline).
+      if (!error.response && error.message === "Network Error") {
+        toast.error("Offline Mode - No cached notes available.");
+      } else if (error.response?.status === 429) {
         setIsRateLimited(true);
       } else {
         toast.error("Failed to load notes");
