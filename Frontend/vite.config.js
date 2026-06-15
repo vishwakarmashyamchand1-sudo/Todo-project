@@ -58,7 +58,7 @@ export default defineConfig({
       workbox: {
         runtimeCaching: [
           {
-            urlPattern: /\/api\/notes/i,
+            urlPattern: /^https?:\/\/.*\/api\/notes/i,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'notes-api-cache',
