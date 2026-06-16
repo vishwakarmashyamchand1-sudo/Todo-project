@@ -8,8 +8,8 @@ export const sendBrowserNotification = async (title, body) => {
     const triggerNotification = async () => {
       if ("serviceWorker" in navigator) {
         try {
-          const registration = await navigator.serviceWorker.ready;
-          if (registration && registration.showNotification) {
+          const registration = await navigator.serviceWorker.getRegistration();
+          if (registration && registration.active && registration.showNotification) {
             await registration.showNotification(title, {
               body,
               icon: "/pwa-192x192.png",
