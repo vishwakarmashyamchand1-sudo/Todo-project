@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import api from "../lib/axios";
 import toast from "react-hot-toast";
-import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from "lucide-react";
+import { ArrowLeftIcon, LoaderIcon, Trash2Icon, Share2Icon } from "lucide-react";
 
 const NoteDetailPage = () => {
   const [note, setNote] = useState(null);
@@ -40,6 +40,24 @@ const NoteDetailPage = () => {
     } catch (error) {
       console.log("Error deleting the note:", error);
       toast.error("Failed to delete note");
+    }
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: note.title,
+      text: note.content,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      navigator.clipboard.writeText(`${note.title}\n\n${note.content}`);
+      toast.success("Note copied to clipboard!");
     }
   };
 
@@ -80,10 +98,16 @@ const NoteDetailPage = () => {
               <ArrowLeftIcon className="h-5 w-5" />
               Back to Notes
             </Link>
-            <button onClick={handleDelete} className="btn btn-error btn-outline">
-              <Trash2Icon className="h-5 w-5" />
-              Delete Note
-            </button>
+            <div className="flex gap-2">
+              <button onClick={handleShare} className="btn btn-primary btn-outline">
+                <Share2Icon className="h-5 w-5" />
+                Share
+              </button>
+              <button onClick={handleDelete} className="btn btn-error btn-outline">
+                <Trash2Icon className="h-5 w-5" />
+                Delete
+              </button>
+            </div>
           </div>
 
           <div className="card bg-base-100">

@@ -1,4 +1,4 @@
-import { PenSquareIcon, Trash2Icon } from "lucide-react";
+import { PenSquareIcon, Trash2Icon, Share2Icon } from "lucide-react";
 import { Link } from "react-router";
 import { formatDate } from "../lib/utils";
 import api from "../lib/axios";
@@ -18,6 +18,27 @@ const NoteCard = ({ note, setNotes }) => {
     } catch (error) {
       console.log("Error in handleDelete", error);
       toast.error("Failed to delete note");
+    }
+  };
+
+  const handleShare = async (e, note) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const shareData = {
+      title: note.title,
+      text: note.content,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      navigator.clipboard.writeText(`${note.title}\n\n${note.content}`);
+      toast.success("Note copied to clipboard!");
     }
   };
 
@@ -42,6 +63,12 @@ const NoteCard = ({ note, setNotes }) => {
           </span>
           <div className="flex items-center gap-1">
             <PenSquareIcon className="size-4" />
+            <button
+              className="btn btn-ghost btn-xs text-primary"
+              onClick={(e) => handleShare(e, note)}
+            >
+              <Share2Icon className="size-4" />
+            </button>
             <button
               className="btn btn-ghost btn-xs text-error"
               onClick={(e) => handleDelete(e, note._id)}

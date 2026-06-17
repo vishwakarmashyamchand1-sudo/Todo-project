@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import api from "./lib/axios";
 import { sendBrowserNotification } from "./lib/notifications";
@@ -9,7 +9,21 @@ import CreatePage from "./pages/CreatePage";
 import NoteDetailPage from "./pages/NoteDetailPage";
 
 const App = () => {
+  const [isDark, setIsDark] = useState(
+    () => (localStorage.getItem("theme") || "dark") === "dark"
+  );
+
   useEffect(() => {
+    // Observe theme changes from Navbar
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "data-theme") {
+          setIsDark(document.documentElement.getAttribute("data-theme") === "dark");
+        }
+      });
+    });
+    observer.observe(document.documentElement, { attributes: true });
+
     const syncPendingNotes = async () => {
       if (!navigator.onLine) return;
       
@@ -47,8 +61,10 @@ const App = () => {
 
   return (
     <div className="relative h-full w-full">
-      {/* Option 2: Purple AI Style Background */}
-      <div className="absolute inset-0 -z-10 h-full w-full min-h-screen bg-gradient-to-br from-[#a995c4] via-[#3b1d6e] to-[#0f0524]" />
+      {/* Option 2: Purple AI Style Background - Only in Dark Mode */}
+      {isDark && (
+        <div className="absolute inset-0 -z-10 h-full w-full min-h-screen bg-gradient-to-br from-[#a995c4] via-[#3b1d6e] to-[#0f0524]" />
+      )}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/create" element={<CreatePage />} />
